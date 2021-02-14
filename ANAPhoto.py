@@ -83,156 +83,7 @@ def checkPath(srcFolder):
     else:   
         return True
 
-def createPlot(srcFolder):
-    srcPathIncExtName = srcFolder + "\\*." + "jpg"
-    listAllEXIF = []
-
-    for srcName in glob.glob(srcPathIncExtName):
-        exifList = imgProcess.getExif(srcName)
-        exifList.insert(0, os.path.basename(srcName))
-        listAllEXIF.append(exifList)
-    
-    FocalLengthOrg = []
-    FocalLength = []
-    for item in listAllEXIF:
-        FocalLengthOrg.append(item[4])
-    CountNone = FocalLengthOrg.count("None")
-    
-    for item in FocalLengthOrg:
-        if item != "None":
-            FocalLength.append(float(item))
-
-    ## Init Plot
-    fig, axes = plt.subplots(3, figsize = (18,8))
-    plt.subplots_adjust(bottom=0.06, top=0.94, left=0.06, right=0.88, hspace=0.35, wspace=0.35)
-
-    ax = axes[0]
-    ax1 = axes[1]
-    ax2 = axes[2]
-
-    ax.set_title('FocalLength')
-    ax1.set_title('Aperture')
-    ax2.set_title('ShutterSpd')
-
-    ax.grid()
-    ax1.grid()
-    ax2.grid()
-
-    lines = []
-    lines1 = []
-    lines2 = []
-
-    # Plot1    
-    List2DTemp = []
-    for item in FocalLength:
-        listTemp = []
-        listTemp.append(item)
-        listTemp.append(FocalLength.count(item))
-        List2DTemp.append(listTemp)
-    print(List2DTemp)
-    List2DTemp =set(tuple(element) for element in List2DTemp)
-    print(List2DTemp)
-    List2DTemp = sorted(List2DTemp, key = lambda x: (x[0]))
-
-    print(List2DTemp)
-
-    x = []
-    y = []
-
-    for item in List2DTemp:
-        x.append(item[0])
-        y.append(item[1])
-
-    x_pos = [i for i, _ in enumerate(x)]
-    plt.bar(x_pos, y, color='blue')
-
-    plt.xticks(x_pos, x)
-
-    plt.show()
-
-    # for i in range(0, lineNo + 1):
-    #     x.clear()
-    #     y.clear()    
-    #     lineLabel = legendlabel[i]        
-    #     for j in range(0, 200):
-    #         x.append(float(xAxis[i * 200 + j]))            
-    #         y.append(float(yAxis[i * 200 + j]))          
-    #     if i == 0:       
-    #         line, = ax.plot(x, y, lw = 1, linestyle = '--', label = lineLabel)
-    #     else:
-    #         line, = ax.plot(x, y, lw = 1, label = lineLabel)
-
-    #     #line, = ax.plot(x, y, lw = 1, label = lineLabel)
-    #     lines.append(line)
-    # # Plot2
-    # for i in range(0, lineNo + 1):
-    #     x.clear()
-    #     y.clear()    
-    #     lineLabel = legendlabel[i]        
-    #     for j in range(0, 200):
-    #         x.append(float(xAxis[i * 200 + j]))            
-    #         y.append(float(yAxisS[i * 200 + j]))  
-    #     if i == 0:       
-    #         line, = ax1.plot(x, y, lw = 1, linestyle = '--', label = lineLabel)
-    #     else:
-    #         line, = ax1.plot(x, y, lw = 1, label = lineLabel)
-
-    #     #line, = ax.plot(x, y, lw = 1, label = lineLabel)
-    #     lines1.append(line)
-    # # Plot3
-    # for i in range(0, lineNo + 1):
-    #     x.clear()
-    #     y.clear()    
-    #     lineLabel = legendlabel[i]        
-    #     for j in range(0, 200):
-    #         x.append(float(xAxis2[i * 200 + j]))            
-    #         y.append(float(yAxis2[i * 200 + j]))   
-    #     if i == 0:       
-    #         line, = ax2.plot(x, y, lw = 1, linestyle = '--', label = lineLabel)
-    #     else:
-    #         line, = ax2.plot(x, y, lw = 1, label = lineLabel)
-
-    #     lines2.append(line)
-
-    # # on_pick via legend
-    # #leg = ax2.legend(fancybox=True, shadow=True, loc='upper right')
-    # leg = ax1.legend(fancybox=True, shadow=True, bbox_to_anchor=(1,1), loc="upper left")
-    
-    # lined = {}  # Will map legend lines to original lines.
-    # lined1 = {}  # Will map legend lines to original lines.
-    # lined2 = {}  # Will map legend lines to original lines.
-
-    # for legline, origline in zip(leg.get_lines(), lines):
-    #     legline.set_picker(True)  # Enable picking on the legend line.
-    #     lined[legline] = origline
-    # for legline, origline in zip(leg.get_lines(), lines1):
-    #     legline.set_picker(True)  # Enable picking on the legend line.
-    #     lined1[legline] = origline
-    # for legline, origline in zip(leg.get_lines(), lines2):
-    #     legline.set_picker(True)  # Enable picking on the legend line.
-    #     lined2[legline] = origline
-
-    # def on_pick(event):
-    #     # On the pick event, find the original line corresponding to the legend
-    #     # proxy line, and toggle its visibility.
-    #     legline = event.artist
-    #     origline = lined[legline]
-    #     origline1 = lined1[legline]
-    #     origline2 = lined2[legline]
-    #     visible = not origline.get_visible()
-    #     origline.set_visible(visible)
-    #     origline1.set_visible(visible)
-    #     origline2.set_visible(visible)
-    #     # Change the alpha on the line in the legend so we can see what lines
-    #     # have been toggled.
-    #     legline.set_alpha(1.0 if visible else 0.2)
-    #     fig.canvas.draw()
-
-    # fig.canvas.mpl_connect('pick_event', on_pick)
-    # plt.show()
-
-def createPlotTest(srcFolder):
-
+def genPlot(srcFolder):
     srcPathIncExtName = srcFolder + "\\**\\*." + "jpg"    
     listImage = glob.glob(srcPathIncExtName, recursive = True)
     imageCount = len(listImage)
@@ -297,18 +148,6 @@ def createPlotTest(srcFolder):
 
         plt.show()
 
-        # # Pie chart, where the slices will be ordered and plotted counter-clockwise:
-        # labels = ['Frogs', 'Hogs', 'Dogs', 'Logs']
-        # sizes = [15, 30, 45, 10]
-        # explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
-
-        # fig1, ax1 = plt.subplots()
-        # ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-        #         shadow=True, startangle=90)
-        # ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-        # plt.show()
-
 def analyse():
     log_text.configure(state = "normal")
     log_text.delete('1.0', END)   
@@ -316,7 +155,7 @@ def analyse():
 
     srcPath = srcPath_entry.get()
     if checkPath(srcPath):
-        createPlotTest(srcPath)
+        genPlot(srcPath)
 
     log_text.see(END)
     log_text.configure(state = "disable")
@@ -326,7 +165,6 @@ def thread_it(func, *args):
     t.setDaemon(True)
     t.start()
 
-# plot_Button = ttk.Button(mainframe, text = "Analyse", command = analyse)
 plot_Button = ttk.Button(mainframe, text = "Analyse", command = lambda:thread_it(analyse))
 plot_Button.grid(row = 1, column = 2, sticky = (N, S), padx = 5, pady = 5, rowspan = 2)
 
@@ -335,4 +173,3 @@ plot_Button.grid(row = 1, column = 2, sticky = (N, S), padx = 5, pady = 5, rowsp
 #################################################################################################################################
 root.mainloop()
 
-#pyinstaller --noconsole plotEXIF.py
